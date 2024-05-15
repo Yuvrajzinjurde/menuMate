@@ -7,7 +7,11 @@ exports.orderResponses = {
         message: "ERROR WHILE INSERTING THE ORDER",
     },
     ORDER_PLACED: {
-        statusCOde: 500,
+        statusCOde: 200,
         message: "ORDER PLACED SUCCESSFULLY",
+    },
+    NO_ORDERS_FOUND: {
+        statusCOde: 401,
+        message: "ORDERS NOT FOUND",
     },
 };

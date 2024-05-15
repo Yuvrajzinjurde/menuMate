@@ -21,8 +21,15 @@ const order_Schema = new mongoose_1.Schema({
                 type: Number,
                 required: true,
             },
+            averageCookingTime: {
+                type: Number,
+                require: true,
+            },
         },
     ],
+    averageTimeNeeded: {
+        type: Number,
+    },
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -39,6 +46,7 @@ const order_Schema = new mongoose_1.Schema({
 const order_status = new mongoose_1.Schema({
     orderId: {
         type: mongoose_1.Schema.Types.ObjectId,
+        ref: "orderSchema",
     },
     isActive: {
         type: Boolean,
@@ -53,7 +61,7 @@ const order_status = new mongoose_1.Schema({
     },
 });
 const orderStatus = (0, mongoose_1.model)("orderStatus", order_status);
-const orderSchema = (0, mongoose_1.model)("oderSchema", order_Schema);
+const orderSchema = (0, mongoose_1.model)("orderSchema", order_Schema);
 exports.default = {
     orderSchema,
     orderStatus,

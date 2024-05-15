@@ -21,8 +21,15 @@ const order_Schema = new Schema({
         type: Number,
         required: true,
       },
+      averageCookingTime: {
+        type: Number,
+        require: true,
+      },
     },
   ],
+  averageTimeNeeded: {
+    type: Number,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -40,6 +47,7 @@ const order_Schema = new Schema({
 const order_status = new Schema({
   orderId: {
     type: Schema.Types.ObjectId,
+    ref: "orderSchema",
   },
   isActive: {
     type: Boolean,
@@ -54,7 +62,7 @@ const order_status = new Schema({
   },
 });
 const orderStatus = model("orderStatus", order_status);
-const orderSchema = model("oderSchema", order_Schema);
+const orderSchema = model("orderSchema", order_Schema);
 export default {
   orderSchema,
   orderStatus,

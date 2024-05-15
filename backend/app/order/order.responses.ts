@@ -9,4 +9,8 @@ export const orderResponses: orderResponsesI = {
     statusCOde: 200,
     message: "ORDER PLACED SUCCESSFULLY",
   },
+  NO_ORDERS_FOUND: {
+    statusCOde: 401,
+    message: "ORDERS NOT FOUND",
+  },
 };
