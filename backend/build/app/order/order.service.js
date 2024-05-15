@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequirements = exports.getAllActiveOrders = exports.calculateTotalPriceAndTime = exports.addOrder = void 0;
+exports.updateOrderStatus = exports.getRequirements = exports.getAllActiveOrders = exports.calculateTotalPriceAndTime = exports.addOrder = void 0;
 const order_repo_1 = __importDefault(require("./order.repo"));
 const order_responses_1 = require("./order.responses");
 const addOrder = (order) => {
@@ -47,9 +47,11 @@ exports.calculateTotalPriceAndTime = calculateTotalPriceAndTime;
 const getAllActiveOrders = (req) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = (0, exports.getRequirements)(req);
-        const activeOrders = yield order_repo_1.default.getAllActiveOrders(query);
-        if (!activeOrders)
+        const activeOrdersArray = yield order_repo_1.default.getAllActiveOrders(query);
+        if (!activeOrdersArray)
             order_responses_1.orderResponses.NO_ORDERS_FOUND;
+        const activeOrders = activeOrdersArray.map((order) => order.orderId);
+        console.log(activeOrders);
         return activeOrders;
     }
     catch (e) {
@@ -58,16 +60,39 @@ const getAllActiveOrders = (req) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getAllActiveOrders = getAllActiveOrders;
 const getRequirements = (req) => {
-    if (req === "getallactive")
-        return { isActive: true };
-    if (req === "getunassigned")
-        return { $nd: [{ isActive: true }, { isAssigned: false }] };
-    if (req === "getassigned")
-        return { $nd: [{ isActive: true }, { isAssigned: true }] };
+    try {
+        if (req === "getallactive")
+            return { isActive: true };
+        if (req === "getunassigned")
+            return { $and: [{ isActive: true }, { isAssigned: false }] };
+        if (req === "getassigned")
+            return { $and: [{ isActive: true }, { isAssigned: true }] };
+        throw order_responses_1.orderResponses.BAD_REQUEST;
+    }
+    catch (e) {
+        throw order_responses_1.orderResponses.BAD_REQUEST;
+    }
 };
 exports.getRequirements = getRequirements;
+const updateOrderStatus = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const orderId = req.params.orderId;
+        const updatedFields = req.body;
+        const updates = {
+            orderId,
+            updatedFields,
+        };
+        const isUpdated = yield order_repo_1.default.updateOrderStatus(updates);
+        return isUpdated;
+    }
+    catch (e) {
+        throw e;
+    }
+});
+exports.updateOrderStatus = updateOrderStatus;
 exports.default = {
     addOrder: exports.addOrder,
     getAllActiveOrders: exports.getAllActiveOrders,
     calculateTotalPriceAndTime: exports.calculateTotalPriceAndTime,
+    updateOrderStatus: exports.updateOrderStatus,
 };

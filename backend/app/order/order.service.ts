@@ -1,7 +1,7 @@
-import { menuItemSchemaI } from "../menu/menu.types";
 import orderRepo from "./order.repo";
 import { orderResponses } from "./order.responses";
 import { MenuItemI, OrderI, orderSchemaI } from "./order.types";
+import { Request } from "express";
 
 export const addOrder = (order: orderSchemaI) => {
   try {
@@ -9,35 +9,44 @@ export const addOrder = (order: orderSchemaI) => {
     order.totalPrice = totalPrice;
     order.averageTimeNeeded = averageTime;
 
-    const newOrder = orderRepo.insertOne(order);
+    const newOrder = orderRepo.addOrder(order);
 
     if (!newOrder) throw orderResponses.ERROR_ON_INTERTING_ORDER;
-    return orderResponses.ORDER_PLACED;
+    return newOrder;
   } catch (e) {
     throw orderResponses.ERROR_ON_INTERTING_ORDER;
   }
 };
+
 export const calculateTotalPriceAndTime = (items: MenuItemI[]) => {
-  let totalPrice = 0;
-  let time: number[] = [];
+  try {
+    let totalPrice = 0;
+    let time: number[] = [];
 
-  items.forEach((item) => {
-    totalPrice += item.price * item.quantity;
-    time.push(item.averageCookingTime);
-  });
+    items.forEach((item) => {
+      totalPrice += item.price * item.quantity;
+      time.push(item.averageCookingTime);
+    });
 
-  let averageTime: number = Math.max(...time) + 10;
+    let averageTime: number = Math.max(...time) + 10;
 
-  return {
-    averageTime,
-    totalPrice,
-  };
+    return {
+      averageTime,
+      totalPrice,
+    };
+  } catch (e) {
+    throw e;
+  }
 };
 export const getAllActiveOrders = async (req: string) => {
   try {
     const query = getRequirements(req);
-    const activeOrders = await orderRepo.getAllActiveOrders(query);
-    if (!activeOrders) orderResponses.NO_ORDERS_FOUND;
+    const activeOrdersArray = await orderRepo.getAllActiveOrders(query);
+    if (!activeOrdersArray) orderResponses.NO_ORDERS_FOUND;
+
+    const activeOrders = activeOrdersArray.map((order) => order.orderId);
+    console.log(activeOrders);
+
     return activeOrders;
   } catch (e) {
     throw e;
@@ -45,17 +54,41 @@ export const getAllActiveOrders = async (req: string) => {
 };
 
 export const getRequirements = (req: string) => {
-  if (req === "getallactive") return { isActive: true };
+  try {
+    if (req === "getallactive") return { isActive: true };
 
-  if (req === "getunassigned")
-    return { $nd: [{ isActive: true }, { isAssigned: false }] };
+    if (req === "getunassigned")
+      return { $and: [{ isActive: true }, { isAssigned: false }] };
 
-  if (req === "getassigned")
-    return { $nd: [{ isActive: true }, { isAssigned: true }] };
+    if (req === "getassigned")
+      return { $and: [{ isActive: true }, { isAssigned: true }] };
+
+    throw orderResponses.BAD_REQUEST;
+  } catch (e) {
+    throw orderResponses.BAD_REQUEST;
+  }
+};
+
+export const updateOrderStatus = async (req: Request) => {
+  try {
+    const orderId = req.params.orderId;
+    const updatedFields = req.body;
+
+    const updates = {
+      orderId,
+      updatedFields,
+    };
+
+    const isUpdated = await orderRepo.updateOrderStatus(updates);
+    return isUpdated;
+  } catch (e) {
+    throw e;
+  }
 };
 
 export default {
   addOrder,
   getAllActiveOrders,
   calculateTotalPriceAndTime,
+  updateOrderStatus,
 };

@@ -8,22 +8,32 @@ import { getAllActiveOrders } from "./order.repo";
 const orderRouter = Router();
 
 orderRouter.post("/neworder", ...orderValidations, (req, res, next) => {
-  const result = orderService.addOrder(req.body);
-  if (result) res.send(new responseHandler(result));
+  try {
+    const result = orderService.addOrder(req.body);
+    res.send(new responseHandler(result));
+  } catch (e) {
+    next(e);
+  }
 });
 
 orderRouter.get("/getorders/:getreq", async (req, res, next) => {
-  const result = await orderService.getAllActiveOrders(
-    req.params.getreq.toString()
-  );
-
-  res.send(new responseHandler(result));
+  try {
+    const result = await orderService.getAllActiveOrders(
+      req.params.getreq.toString()
+    );
+    res.send(new responseHandler(result));
+  } catch (e) {
+    next(e);
+  }
 });
 
-orderRouter.put("/update-status/:orderID", (req, res, next) => {
-  
+orderRouter.put("/update-status/:orderId", async (req, res, next) => {
+  try {
+    const result = await orderService.updateOrderStatus(req);
+    res.send(new responseHandler(result));
+  } catch (e) {
+    next(e);
+  }
 });
 
-export default new Route("/order", orderRouter);
-
-//Need to be shifted
+export default new Route("/orders", orderRouter);

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllActiveOrders = exports.insertOne = void 0;
+exports.updateOrderStatus = exports.getAllActiveOrders = exports.insertOne = void 0;
 const order_schema_1 = __importDefault(require("./order.schema"));
 const insertOne = (order) => {
     const newOrder = new order_schema_1.default.orderSchema(order);
@@ -28,18 +28,23 @@ const insertOne = (order) => {
 };
 exports.insertOne = insertOne;
 const getAllActiveOrders = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log("we are here");
-    // const activeOrders = await orderSchemaa.orderStatus.find({ isActive: true });
-    // .find({ $nd: [{ isActive: true }] })
     const activeOrders = yield order_schema_1.default.orderStatus
         .find(query)
         .populate("orderId")
+        .sort({ createdAt: 1 })
         .exec();
-    console.log(activeOrders);
     return activeOrders;
 });
 exports.getAllActiveOrders = getAllActiveOrders;
+const updateOrderStatus = (updates) => __awaiter(void 0, void 0, void 0, function* () {
+    const { orderId, updatedFields } = updates;
+    const isUpdated = yield order_schema_1.default.orderStatus.findOneAndUpdate({ orderId }, { $set: updatedFields });
+    console.log(isUpdated);
+    return isUpdated;
+});
+exports.updateOrderStatus = updateOrderStatus;
 exports.default = {
     insertOne: exports.insertOne,
     getAllActiveOrders: exports.getAllActiveOrders,
+    updateOrderStatus: exports.updateOrderStatus,
 };

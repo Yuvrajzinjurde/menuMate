@@ -14,4 +14,12 @@ exports.orderResponses = {
         statusCOde: 401,
         message: "ORDERS NOT FOUND",
     },
+    BAD_REQUEST: {
+        statusCOde: 400,
+        message: "BAD REQUEST FROM PARAMS",
+    },
+    ORDER_UPDATED: {
+        statusCOde: 200,
+        message: "ORDER UPDATED SUCCESSFULLY",
+    },
 };

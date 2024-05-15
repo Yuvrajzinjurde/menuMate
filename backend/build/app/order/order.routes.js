@@ -24,10 +24,19 @@ orderRouter.post("/neworder", ...order_validations_1.orderValidations, (req, res
         res.send(new responseHandler_1.responseHandler(result));
 });
 orderRouter.get("/getorders/:getreq", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.default.getAllActiveOrders(req.params.getreq.toString());
-    res.send(new responseHandler_1.responseHandler(result));
+    try {
+        const result = yield order_service_1.default.getAllActiveOrders(req.params.getreq.toString());
+        res.send(new responseHandler_1.responseHandler(result));
+    }
+    catch (e) {
+        next(e);
+    }
 }));
-orderRouter.put("/update-status/:orderID", (req, res, next) => {
-});
-exports.default = new routes_types_1.Route("/order", orderRouter);
-//Need to be shifted
+orderRouter.put("/update-status/:orderId", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield order_service_1.default.updateOrderStatus(req);
+        res.send(new responseHandler_1.responseHandler(result));
+    }
+    catch (e) { }
+}));
+exports.default = new routes_types_1.Route("/orders", orderRouter);

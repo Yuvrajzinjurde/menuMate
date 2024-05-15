@@ -20,15 +20,15 @@ export const orderSchema = z.object({
 });
 
 export interface MenuItemI {
-  price: number;
+  itemId: string;
   quantity: number;
+  price: number;
   averageCookingTime: number;
 }
 
 export interface OrderI {
+  tableNumber: number;
   items: MenuItemI[];
-  averageCookingTime?: number;
-  totalPrice?: number;
 }
 
 export interface orderSchemaI extends z.infer<typeof orderSchema> {}

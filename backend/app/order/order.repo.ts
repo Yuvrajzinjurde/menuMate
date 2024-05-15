@@ -1,7 +1,7 @@
 import orderSchemaa from "./order.schema";
 import { orderSchemaI } from "./order.types";
 
-export const insertOne = (order: orderSchemaI) => {
+export const addOrder = (order: orderSchemaI) => {
   const newOrder = new orderSchemaa.orderSchema(order);
   newOrder.save();
 
@@ -22,12 +22,21 @@ export const getAllActiveOrders = async (query: any) => {
     .populate("orderId")
     .sort({ createdAt: 1 })
     .exec();
-  console.log(activeOrders);
-
   return activeOrders;
 };
 
+export const updateOrderStatus = async (updates: any) => {
+  const { orderId, updatedFields } = updates;
+  const isUpdated = await orderSchemaa.orderStatus.findOneAndUpdate(
+    { orderId },
+    { $set: updatedFields }
+  );
+  console.log(isUpdated);
+  return isUpdated;
+};
+
 export default {
-  insertOne,
+  addOrder,
   getAllActiveOrders,
+  updateOrderStatus,
 };
