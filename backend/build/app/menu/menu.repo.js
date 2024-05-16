@@ -14,11 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMenu = void 0;
 const menu_schema_1 = __importDefault(require("./menu.schema"));
-const getMenu = () => __awaiter(void 0, void 0, void 0, function* () {
-    const menu = yield menu_schema_1.default.find({});
-    return menu;
-});
+const getMenu = () => __awaiter(void 0, void 0, void 0, function* () { return yield menu_schema_1.default.find({}); });
 exports.getMenu = getMenu;
 exports.default = {
-    getMenu: exports.getMenu
+    getMenu: exports.getMenu,
 };

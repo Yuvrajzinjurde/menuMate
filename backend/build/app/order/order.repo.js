@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrderStatus = exports.getAllActiveOrders = exports.insertOne = void 0;
+exports.updateOrderStatus = exports.getAllActiveOrders = exports.addOrder = void 0;
 const order_schema_1 = __importDefault(require("./order.schema"));
-const insertOne = (order) => {
+const addOrder = (order) => {
     const newOrder = new order_schema_1.default.orderSchema(order);
     newOrder.save();
     const newOrderStatus = new order_schema_1.default.orderStatus({
@@ -26,7 +26,7 @@ const insertOne = (order) => {
     newOrderStatus.save();
     return newOrder;
 };
-exports.insertOne = insertOne;
+exports.addOrder = addOrder;
 const getAllActiveOrders = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const activeOrders = yield order_schema_1.default.orderStatus
         .find(query)
@@ -44,7 +44,7 @@ const updateOrderStatus = (updates) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.updateOrderStatus = updateOrderStatus;
 exports.default = {
-    insertOne: exports.insertOne,
+    addOrder: exports.addOrder,
     getAllActiveOrders: exports.getAllActiveOrders,
     updateOrderStatus: exports.updateOrderStatus,
 };

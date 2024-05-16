@@ -1,10 +1,7 @@
 import menuSchema from "./menu.schema";
 
-export const getMenu = async () =>{
-    const menu =  await menuSchema.find({});
-    return menu;
-}
+export const getMenu = async () => await menuSchema.find({});
 
-export default{
-    getMenu
-}
+export default {
+  getMenu,
+};

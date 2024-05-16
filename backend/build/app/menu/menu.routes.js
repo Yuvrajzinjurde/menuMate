@@ -17,8 +17,13 @@ const routes_types_1 = require("../routes/routes.types");
 const menu_service_1 = __importDefault(require("./menu.service"));
 const responseHandler_1 = require("../utility/responseHandler");
 const menuRouter = (0, express_1.Router)();
-menuRouter.get('/getmenu', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const menu = yield menu_service_1.default.getMenu();
-    res.send(new responseHandler_1.responseHandler(menu));
+menuRouter.get("/getmenu", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const menu = yield menu_service_1.default.getMenu();
+        res.send(new responseHandler_1.responseHandler(menu));
+    }
+    catch (e) {
+        next(e);
+    }
 }));
 exports.default = new routes_types_1.Route("/menu", menuRouter);

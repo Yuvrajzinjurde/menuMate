@@ -20,10 +20,10 @@ const addOrder = (order) => {
         const { averageTime, totalPrice } = (0, exports.calculateTotalPriceAndTime)(order.items);
         order.totalPrice = totalPrice;
         order.averageTimeNeeded = averageTime;
-        const newOrder = order_repo_1.default.insertOne(order);
+        const newOrder = order_repo_1.default.addOrder(order);
         if (!newOrder)
             throw order_responses_1.orderResponses.ERROR_ON_INTERTING_ORDER;
-        return order_responses_1.orderResponses.ORDER_PLACED;
+        return newOrder;
     }
     catch (e) {
         throw order_responses_1.orderResponses.ERROR_ON_INTERTING_ORDER;
@@ -31,17 +31,22 @@ const addOrder = (order) => {
 };
 exports.addOrder = addOrder;
 const calculateTotalPriceAndTime = (items) => {
-    let totalPrice = 0;
-    let time = [];
-    items.forEach((item) => {
-        totalPrice += item.price * item.quantity;
-        time.push(item.averageCookingTime);
-    });
-    let averageTime = Math.max(...time) + 10;
-    return {
-        averageTime,
-        totalPrice,
-    };
+    try {
+        let totalPrice = 0;
+        let time = [];
+        items.forEach((item) => {
+            totalPrice += item.price * item.quantity;
+            time.push(item.averageCookingTime);
+        });
+        let averageTime = Math.max(...time) + 10;
+        return {
+            averageTime,
+            totalPrice,
+        };
+    }
+    catch (e) {
+        throw e;
+    }
 };
 exports.calculateTotalPriceAndTime = calculateTotalPriceAndTime;
 const getAllActiveOrders = (req) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,7 +56,6 @@ const getAllActiveOrders = (req) => __awaiter(void 0, void 0, void 0, function* 
         if (!activeOrdersArray)
             order_responses_1.orderResponses.NO_ORDERS_FOUND;
         const activeOrders = activeOrdersArray.map((order) => order.orderId);
-        console.log(activeOrders);
         return activeOrders;
     }
     catch (e) {
@@ -67,17 +71,15 @@ const getRequirements = (req) => {
             return { $and: [{ isActive: true }, { isAssigned: false }] };
         if (req === "getassigned")
             return { $and: [{ isActive: true }, { isAssigned: true }] };
-        throw order_responses_1.orderResponses.BAD_REQUEST;
+        throw order_responses_1.orderResponses.BAD_REQUEST_PARAMS;
     }
     catch (e) {
-        throw order_responses_1.orderResponses.BAD_REQUEST;
+        throw order_responses_1.orderResponses.BAD_REQUEST_PARAMS;
     }
 };
 exports.getRequirements = getRequirements;
-const updateOrderStatus = (req) => __awaiter(void 0, void 0, void 0, function* () {
+const updateOrderStatus = (orderId, updatedFields) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const orderId = req.params.orderId;
-        const updatedFields = req.body;
         const updates = {
             orderId,
             updatedFields,

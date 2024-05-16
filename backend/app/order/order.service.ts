@@ -45,7 +45,6 @@ export const getAllActiveOrders = async (req: string) => {
     if (!activeOrdersArray) orderResponses.NO_ORDERS_FOUND;
 
     const activeOrders = activeOrdersArray.map((order) => order.orderId);
-    console.log(activeOrders);
 
     return activeOrders;
   } catch (e) {
@@ -63,17 +62,14 @@ export const getRequirements = (req: string) => {
     if (req === "getassigned")
       return { $and: [{ isActive: true }, { isAssigned: true }] };
 
-    throw orderResponses.BAD_REQUEST;
+    throw orderResponses.BAD_REQUEST_PARAMS;
   } catch (e) {
-    throw orderResponses.BAD_REQUEST;
+    throw orderResponses.BAD_REQUEST_PARAMS;
   }
 };
 
-export const updateOrderStatus = async (req: Request) => {
+export const updateOrderStatus = async (orderId: string, updatedFields: {}) => {
   try {
-    const orderId = req.params.orderId;
-    const updatedFields = req.body;
-
     const updates = {
       orderId,
       updatedFields,

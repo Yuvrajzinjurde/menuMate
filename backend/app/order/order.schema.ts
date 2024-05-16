@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
-import { boolean } from "zod";
 
-const order_Schema = new Schema({
+const orderSchemaa = new Schema({
   tableNumber: {
     type: Number,
     required: true,
@@ -36,7 +35,6 @@ const order_Schema = new Schema({
   },
   totalPrice: {
     type: Number,
-    // required: true,
   },
   isPaid: {
     type: Boolean,
@@ -44,7 +42,7 @@ const order_Schema = new Schema({
   },
 });
 
-const order_status = new Schema({
+const orderStatuss = new Schema({
   orderId: {
     type: Schema.Types.ObjectId,
     ref: "orderSchema",
@@ -61,8 +59,9 @@ const order_status = new Schema({
     default: false,
   },
 });
-const orderStatus = model("orderStatus", order_status);
-const orderSchema = model("orderSchema", order_Schema);
+const orderStatus = model("orderStatus", orderStatuss);
+const orderSchema = model("orderSchema", orderSchemaa);
+
 export default {
   orderSchema,
   orderStatus,

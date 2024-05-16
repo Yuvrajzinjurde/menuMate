@@ -19,24 +19,32 @@ const order_service_1 = __importDefault(require("./order.service"));
 const responseHandler_1 = require("../utility/responseHandler");
 const orderRouter = (0, express_1.Router)();
 orderRouter.post("/neworder", ...order_validations_1.orderValidations, (req, res, next) => {
-    const result = order_service_1.default.addOrder(req.body);
-    if (result)
-        res.send(new responseHandler_1.responseHandler(result));
-});
-orderRouter.get("/getorders/:getreq", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield order_service_1.default.getAllActiveOrders(req.params.getreq.toString());
+        const result = order_service_1.default.addOrder(req.body);
+        res.send(new responseHandler_1.responseHandler(result));
+    }
+    catch (e) {
+        next(e);
+    }
+});
+orderRouter.get("/getorders/:getreq", ...order_validations_1.getOrderValidations, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield order_service_1.default.getAllActiveOrders(req.params.getreq);
         res.send(new responseHandler_1.responseHandler(result));
     }
     catch (e) {
         next(e);
     }
 }));
-orderRouter.put("/update-status/:orderId", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+orderRouter.put("/update-status/:order_id", ...order_validations_1.updateValidations, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield order_service_1.default.updateOrderStatus(req);
+        const orderId = req.params.order_id;
+        const updatedFields = req.body;
+        const result = yield order_service_1.default.updateOrderStatus(orderId, updatedFields);
         res.send(new responseHandler_1.responseHandler(result));
     }
-    catch (e) { }
+    catch (e) {
+        next(e);
+    }
 }));
 exports.default = new routes_types_1.Route("/orders", orderRouter);

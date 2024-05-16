@@ -19,6 +19,21 @@ export const orderSchema = z.object({
   isPaid: z.boolean(),
 });
 
+export const getOrderParamValidations = z.object({
+  getreq: z.enum(["getallactive", "getassigned", "getunassigned"]),
+});
+
+export const paramValidationSchema = z.object({
+  order_id: z.string(),
+});
+
+export const updateStatusSchema = z.object({
+  orderId: z.string().optional(),
+  isActive: z.boolean().optional(),
+  preparingStaff: z.string().optional(),
+  isAssigned: z.boolean().optional(),
+});
+
 export interface MenuItemI {
   itemId: string;
   quantity: number;

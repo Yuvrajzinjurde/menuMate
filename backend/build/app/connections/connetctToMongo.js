@@ -12,23 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startServer = void 0;
-const express_1 = __importDefault(require("express"));
-const routes_1 = require("./routes/routes");
-const connetctToMongo_1 = require("./connections/connetctToMongo");
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.connectDB = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const app = (0, express_1.default)();
-        (0, routes_1.registerMiddlewares)(app);
-        yield (0, connetctToMongo_1.connectDB)();
-        const { PORT } = process.env;
-        app.listen(PORT, () => {
-            console.log(`SERVER UP AND RUNNIG ON THE PORT ${PORT}`);
-        });
+        yield mongoose_1.default.connect(process.env.MONGO_URI || "");
+        console.log("CONNECTED TO DB");
     }
     catch (e) {
-        console.log(e);
-        process.exit(1);
+        throw "FAILED TO CONNECT";
     }
 });
-exports.startServer = startServer;
+exports.connectDB = connectDB;

@@ -3,7 +3,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 export const validator =
   <T extends ZodRawShape>(
-    source: "body" | "param" | "query",
+    source: "body" | "params" | "query",
     schema: ZodObject<T>,
     passthrough: boolean = false
   ) =>
@@ -27,14 +27,14 @@ export const validator =
 export const body = <T extends ZodRawShape>(
   schema: ZodObject<T>,
   passthrough: boolean = false
-) => validator("body", schema);
+) => validator("body", schema, passthrough);
 
-export const param = <T extends ZodRawShape>(
+export const params = <T extends ZodRawShape>(
   schema: ZodObject<T>,
   passthrough: boolean = false
-) => validator("param", schema);
+) => validator("params", schema, passthrough);
 
 export const query = <T extends ZodRawShape>(
   schema: ZodObject<T>,
   passthrough: boolean = false
-) => validator("query", schema);
+) => validator("query", schema, passthrough);

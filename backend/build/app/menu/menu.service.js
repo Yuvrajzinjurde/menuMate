@@ -19,7 +19,7 @@ const getMenu = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const menu = yield menu_repo_1.default.getMenu();
         if (!menu)
-            menuResponses_1.menuResponses.NO_MENU_FOUND;
+            throw menuResponses_1.menuResponses.NO_MENU_FOUND;
         return menu;
     }
     catch (e) {
@@ -28,5 +28,5 @@ const getMenu = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getMenu = getMenu;
 exports.default = {
-    getMenu: exports.getMenu
+    getMenu: exports.getMenu,
 };

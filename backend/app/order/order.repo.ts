@@ -1,11 +1,11 @@
-import orderSchemaa from "./order.schema";
+import orderModel from "./order.schema";
 import { orderSchemaI } from "./order.types";
 
 export const addOrder = (order: orderSchemaI) => {
-  const newOrder = new orderSchemaa.orderSchema(order);
+  const newOrder = new orderModel.orderSchema(order);
   newOrder.save();
 
-  const newOrderStatus = new orderSchemaa.orderStatus({
+  const newOrderStatus = new orderModel.orderStatus({
     orderId: newOrder._id,
     isPaid: false,
     isActive: true,
@@ -17,7 +17,7 @@ export const addOrder = (order: orderSchemaI) => {
 };
 
 export const getAllActiveOrders = async (query: any) => {
-  const activeOrders = await orderSchemaa.orderStatus
+  const activeOrders = await orderModel.orderStatus
     .find(query)
     .populate("orderId")
     .sort({ createdAt: 1 })
@@ -27,7 +27,7 @@ export const getAllActiveOrders = async (query: any) => {
 
 export const updateOrderStatus = async (updates: any) => {
   const { orderId, updatedFields } = updates;
-  const isUpdated = await orderSchemaa.orderStatus.findOneAndUpdate(
+  const isUpdated = await orderModel.orderStatus.findOneAndUpdate(
     { orderId },
     { $set: updatedFields }
   );

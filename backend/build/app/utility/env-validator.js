@@ -5,7 +5,7 @@ const dotenv_1 = require("dotenv");
 const zod_1 = require("zod");
 exports.envValidator = zod_1.z.object({
     PORT: zod_1.z.coerce.number(),
-    MONGO_URI: zod_1.z.string()
+    MONGO_URI: zod_1.z.string(),
 });
 const validateEnv = () => {
     try {
@@ -13,13 +13,13 @@ const validateEnv = () => {
         exports.envValidator.parse(process.env);
     }
     catch (e) {
-        throw ({
+        throw {
             message: "ENV NOT CONFIGURED CORRECTLY",
-            error: e
-        });
+            error: e,
+        };
     }
 };
 exports.validateEnv = validateEnv;
 exports.default = {
-    validateEnv: exports.validateEnv
+    validateEnv: exports.validateEnv,
 };
