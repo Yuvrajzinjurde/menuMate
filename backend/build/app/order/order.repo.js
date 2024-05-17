@@ -39,7 +39,6 @@ exports.getAllActiveOrders = getAllActiveOrders;
 const updateOrderStatus = (updates) => __awaiter(void 0, void 0, void 0, function* () {
     const { orderId, updatedFields } = updates;
     const isUpdated = yield order_schema_1.default.orderStatus.findOneAndUpdate({ orderId }, { $set: updatedFields });
-    console.log(isUpdated);
     return isUpdated;
 });
 exports.updateOrderStatus = updateOrderStatus;

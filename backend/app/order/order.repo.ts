@@ -4,7 +4,6 @@ import { orderSchemaI } from "./order.types";
 export const addOrder = (order: orderSchemaI) => {
   const newOrder = new orderModel.orderSchema(order);
   newOrder.save();
-
   const newOrderStatus = new orderModel.orderStatus({
     orderId: newOrder._id,
     isPaid: false,
@@ -31,7 +30,6 @@ export const updateOrderStatus = async (updates: any) => {
     { orderId },
     { $set: updatedFields }
   );
-  console.log(isUpdated);
   return isUpdated;
 };
 
