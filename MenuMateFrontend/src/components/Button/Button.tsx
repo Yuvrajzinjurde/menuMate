@@ -1,11 +1,6 @@
 import styles from './button.module.scss'
+import { ButtonProps } from './button.types'
 
-
-interface ButtonProps{
-
-    text:string;
-    onclick:any;
-}
 
 
 export const Button=({text,onclick}:ButtonProps)=>{
